@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZSpeculates</title>
+  <meta name="description" content="ZSpeculates — Trading Track Record" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <link rel="preload" as="image" href="images/zspeculates-logo-light.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- LANDING -->
+  <div id="screen-landing" class="screen active">
+    <div class="landing-inner">
+      <div class="landing-links">
+        <a id="profile-x-link" href="https://x.com/z_speculates" target="_blank" rel="noopener">X</a>
+        <a id="profile-youtube-link" href="https://www.youtube.com/@zspeculates" target="_blank" rel="noopener">YouTube</a>
+      </div>
+
+      <img src="images/zspeculates-logo-light.png" alt="ZSpeculates" class="avatar" id="avatar-img" fetchpriority="high" />
+
+      <h1 class="brand" id="brand-title">ZSPECULATES</h1>
+      <button class="click-label" onclick="goTo('screen-menu')">— click —</button>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <div id="screen-menu" class="screen">
+    <div class="menu-screen-inner">
+      <div class="menu-back-wrap">
+        <button class="back-btn" onclick="goTo('screen-landing')">← back</button>
+      </div>
+      <nav class="menu-nav">
+        <div class="menu-item" onclick="goTo('screen-list')">
+          <div class="menu-item-inner">
+            <span class="menu-dash">—</span>
+            <span class="menu-title">TRACK<br>RECORD</span>
+            <span class="menu-dash">—</span>
+          </div>
+        </div>
+        <div class="menu-item menu-item-small admin-login-only" onclick="goTo('screen-admin-login')">
+          <div class="menu-item-inner">
+            <span class="menu-dash">—</span>
+            <span class="menu-title">ADMIN<br>LOGIN</span>
+            <span class="menu-dash">—</span>
+          </div>
+        </div>
+        <div class="menu-item menu-item-small admin-unlocked-only" onclick="goTo('screen-manage')">
+          <div class="menu-item-inner">
+            <span class="menu-dash">—</span>
+            <span class="menu-title">MANAGE<br>SITE</span>
+            <span class="menu-dash">—</span>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ADMIN LOGIN -->
+  <div id="screen-admin-login" class="screen">
+    <div class="screen-inner manage-inner">
+      <button class="back-btn" onclick="goTo('screen-menu')">← back</button>
+      <p class="update-note">Private editing area</p>
+      <h2 class="section-title">Admin Login</h2>
+      <form id="admin-login-form" class="manage-section admin-login-form">
+        <label>
+          Password
+          <input id="admin-password" type="password" autocomplete="current-password" />
+        </label>
+        <p id="admin-login-error" class="form-error"></p>
+        <div class="manage-actions">
+          <button type="submit">Unlock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TRACK RECORD LIST -->
+  <div id="screen-list" class="screen">
+    <div class="screen-inner">
+      <button class="back-btn" onclick="goTo('screen-menu')">← back</button>
+      <p class="update-note">Updated every Sunday</p>
+      <h2 class="section-title">Track Record</h2>
+      <div id="entries-list"></div>
+    </div>
+  </div>
+
+  <!-- TRADE DETAIL -->
+  <div id="screen-detail" class="screen">
+    <div class="screen-inner">
+      <button class="back-btn" onclick="goTo('screen-list')">← back</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- MANAGE SITE -->
+  <div id="screen-manage" class="screen">
+    <div class="screen-inner manage-inner">
+      <button class="back-btn" onclick="goTo('screen-menu')">← back</button>
+      <p class="update-note" id="save-mode-note">Saved to Supabase when configured</p>
+      <h2 class="section-title">Manage Site</h2>
+
+      <form id="profile-form" class="manage-section">
+        <h3 class="manage-title">Profile</h3>
+        <label>
+          Logo text
+          <input id="profile-brand" type="text" autocomplete="off" />
+        </label>
+        <label>
+          X link
+          <input id="profile-x" type="url" autocomplete="off" />
+        </label>
+        <label>
+          YouTube link
+          <input id="profile-youtube" type="url" autocomplete="off" />
+        </label>
+        <label>
+          Profile picture / logo image
+          <input id="profile-avatar" type="file" accept="image/*" />
+        </label>
+        <div class="manage-actions">
+          <button type="submit">Save profile</button>
+          <button type="button" id="clear-avatar-btn">Clear image</button>
+        </div>
+      </form>
+
+      <form id="password-form" class="manage-section">
+        <h3 class="manage-title">Admin Password</h3>
+        <label>
+          New password
+          <input id="new-admin-password" type="password" autocomplete="new-password" />
+        </label>
+        <p class="manage-help">This changes the password on this browser. Export your data after changing it.</p>
+        <p id="password-save-message" class="form-message"></p>
+        <div class="manage-actions">
+          <button type="submit">Save password</button>
+        </div>
+      </form>
+
+      <form id="trade-form" class="manage-section">
+        <h3 class="manage-title">Trade</h3>
+        <input id="trade-editing-week" type="hidden" />
+        <div class="form-grid">
+          <label>
+            Week
+            <input id="trade-week" type="number" min="1" step="1" required />
+          </label>
+          <label>
+            Dates
+            <input id="trade-dates" type="text" placeholder="Jan 06 - 10, 2026" required />
+          </label>
+          <label>
+            Pair
+            <input id="trade-pair" type="text" placeholder="$EURUSD" required />
+          </label>
+          <label>
+            R:R
+            <input id="trade-rr" type="text" placeholder="5RR" required />
+          </label>
+          <label>
+            Direction
+            <select id="trade-direction">
+              <option>Buy</option>
+              <option>Sell</option>
+            </select>
+          </label>
+          <label>
+            Result
+            <select id="trade-result">
+              <option>Win</option>
+              <option>Loss</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          Breakdown title
+          <input id="trade-tf" type="text" value="›Execution" />
+        </label>
+        <label>
+          Breakdown notes
+          <textarea id="trade-text" rows="5" placeholder="Write your trade breakdown here..."></textarea>
+        </label>
+        <label>
+          Chart screenshot
+          <input id="trade-image" type="file" accept="image/*" />
+        </label>
+        <div class="manage-actions">
+          <button type="submit">Save trade</button>
+          <button type="button" id="reset-trade-form-btn">New trade</button>
+        </div>
+      </form>
+
+      <div class="manage-section">
+        <h3 class="manage-title">Saved Trades</h3>
+        <div id="manage-trades-list" class="manage-trades-list"></div>
+      </div>
+
+      <div class="manage-section">
+        <h3 class="manage-title">Backup</h3>
+        <div class="manage-actions">
+          <button type="button" id="export-data-btn">Export data</button>
+          <label class="import-label">
+            Import data
+            <input id="import-data-input" type="file" accept="application/json" />
+          </label>
+          <button type="button" id="reset-site-btn">Reset site</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/trades.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
